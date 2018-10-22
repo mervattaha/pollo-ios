@@ -1,4 +1,4 @@
- # Clicker iOS Client
+# Clicker iOS Client
 [![GitHub release](https://img.shields.io/github/release/cuappdev/clicker-ios.svg)]()
 [![Platform](https://img.shields.io/badge/platform-ios-lightgrey.svg)]()
 [![GitHub contributors](https://img.shields.io/github/contributors/cuappdev/clicker-ios.svg)]()
