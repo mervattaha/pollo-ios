@@ -9,7 +9,7 @@
 import Alamofire
 import SwiftyJSON
 
-enum APIResponse<T> {
+enum Result<T> {
     case value(T)
     case error(Error)
 }
@@ -18,12 +18,19 @@ enum PolloError: Error {
     case invalidResponse
 }
 
+enum PolloAPIVersion {
+    case version(Int)
+    case none
+}
+
+struct APIResponse<T: Codable>: Codable {
+    let data: APIData<T>
+    let success: Bool
+}
+
 struct APIData<T: Codable>: Codable {
-    let node: Node<T>
-    
-    enum CodingKeys: String, CodingKey {
-        case node = "data"
-    }
+    let node: T?
+    let nodes: [Node<T>]?
 }
 
 struct Node<T: Codable>: Codable {
@@ -34,36 +41,62 @@ struct Node<T: Codable>: Codable {
     }
 }
 
+protocol APIRequest {
+    var route: String { get }
+    var parameters: Parameters { get }
+    var method: HTTPMethod { get }
+    var encoding: ParameterEncoding { get }
+}
+
+extension APIRequest {
+    var parameters: Parameters {
+        return [:]
+    }
+
+    var method: HTTPMethod {
+        return .get
+    }
+
+    var encoding: ParameterEncoding {
+        return JSONEncoding.default
+    }
+}
+
 class NetworkManager {
 
-    static let host: String = Keys.hostURL.value + "/api/v2"
+    static let host: String = Keys.hostURL.value + "/api"
+    static let apiVersion: PolloAPIVersion = .version(2)
     static let headers: HTTPHeaders = ["Authorization": "Bearer \(User.userSession?.accessToken ?? "")"]
 
-    class func createDraft(text: String, options: [String], completionHandler: @escaping ((APIResponse<Draft>) -> Void)) {
-
-        let route: String = "/drafts"
-        let encoding: ParameterEncoding = JSONEncoding.default
-        let parameters: Parameters = ["text": text, "options": options]
-        let urlString = "\(host)\(route)"
-        guard let url = URL(string: urlString) else { return }
-        Alamofire.request(url, method: .post, parameters: parameters, encoding: encoding, headers: headers)
-            .responseData { response in
-                switch response.result {
-                case .success(let data):
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let apiData = try jsonDecoder.decode(APIData<Draft>.self, from: data)
-                        let draft = apiData.node.value
-                        completionHandler(.value(draft))
-                    } catch {
-                        completionHandler(.error(PolloError.invalidResponse))
-                    }
-                case .failure(_):
-                    completionHandler(.error(PolloError.invalidResponse))
-                }
+    class func getBaseURL() -> String {
+        switch apiVersion {
+        case .version(let version):
+            return "\(host)/v\(version)"
+        case .none:
+            return host
         }
+    }
 
-
+    class func performRequest<T: Codable>(for apiRequest: APIRequest, completion: ((Result<T>) -> Void)?) {
+        let urlString = "\(getBaseURL())\(apiRequest.route)"
+        guard let url = URL(string: urlString) else { return }
+        Alamofire.request(url, method: apiRequest.method, parameters: apiRequest.parameters, encoding: apiRequest.encoding, headers: headers).responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let decoder = JSONDecoder()
+                    let apiResponse = try decoder.decode(APIResponse<T>.self, from: data)
+                    let responseData = apiResponse.data
+                    if let node = responseData.node {
+                        completion?(.value(node))
+                    }
+                } catch {
+                    completion?(.error(PolloError.invalidResponse))
+                }
+            case .failure(let error):
+                completion?(.error(error))
+            }
+        }
     }
 
 }

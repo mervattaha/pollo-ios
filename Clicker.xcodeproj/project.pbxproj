@@ -51,6 +51,8 @@
 		C20B571D2139E6080091034F /* MCResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20B571C2139E6080091034F /* MCResultCell.swift */; };
 		C20B571F2139E9F40091034F /* MCResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20B571E2139E9F40091034F /* MCResultModel.swift */; };
 		C2113B1F214AD72800BBBB82 /* CurrentStateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2113B1E214AD72800BBBB82 /* CurrentStateParser.swift */; };
+		C21161D6218514EA0041A856 /* NetworkManager+Draft.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21161D5218514EA0041A856 /* NetworkManager+Draft.swift */; };
+		C21161D8218516290041A856 /* NetworkManager+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21161D7218516290041A856 /* NetworkManager+Session.swift */; };
 		C212179F20281E94007395DA /* UIFont+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = C212179E20281E94007395DA /* UIFont+Shared.swift */; };
 		C21C95BA2145D42F00F58874 /* OptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21C95B92145D42F00F58874 /* OptionModel.swift */; };
 		C21C95BC2145D57000F58874 /* FROptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21C95BB2145D57000F58874 /* FROptionModel.swift */; };
@@ -186,6 +188,8 @@
 		C20B571C2139E6080091034F /* MCResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCResultCell.swift; sourceTree = "<group>"; };
 		C20B571E2139E9F40091034F /* MCResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCResultModel.swift; sourceTree = "<group>"; };
 		C2113B1E214AD72800BBBB82 /* CurrentStateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentStateParser.swift; sourceTree = "<group>"; };
+		C21161D5218514EA0041A856 /* NetworkManager+Draft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkManager+Draft.swift"; sourceTree = "<group>"; };
+		C21161D7218516290041A856 /* NetworkManager+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkManager+Session.swift"; sourceTree = "<group>"; };
 		C212179E20281E94007395DA /* UIFont+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Shared.swift"; sourceTree = "<group>"; };
 		C21C95B92145D42F00F58874 /* OptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionModel.swift; sourceTree = "<group>"; };
 		C21C95BB2145D57000F58874 /* FROptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FROptionModel.swift; sourceTree = "<group>"; };
@@ -473,6 +477,8 @@
 			children = (
 				C27BF0FF1F93E7C100C51095 /* ClickerQuark.swift */,
 				0C5D0C0E2184C99200060874 /* NetworkManager.swift */,
+				C21161D5218514EA0041A856 /* NetworkManager+Draft.swift */,
+				C21161D7218516290041A856 /* NetworkManager+Session.swift */,
 				C2BF44CD2033FA140067505A /* PollQuark.swift */,
 				C2F48EBA2083045A0022FE6B /* DraftQuark.swift */,
 				C2F48EBE208304980022FE6B /* SessionQuark.swift */,
@@ -936,6 +942,7 @@
 				C21C95BC2145D57000F58874 /* FROptionModel.swift in Sources */,
 				C2434CBD2134FFD500929C98 /* PollsDateModel.swift in Sources */,
 				C2B91809208CE3A80030822F /* FRSectionCell.swift in Sources */,
+				C21161D6218514EA0041A856 /* NetworkManager+Draft.swift in Sources */,
 				C22D5B5C21432562005A0E29 /* MCChoiceSectionController.swift in Sources */,
 				637FD6932093E5FA007BADF1 /* NameView.swift in Sources */,
 				C20B570D213893180091034F /* PollSectionController.swift in Sources */,
@@ -950,6 +957,7 @@
 				C2113B1F214AD72800BBBB82 /* CurrentStateParser.swift in Sources */,
 				C2833DF62158747C00586D87 /* PollsDateViewController.swift in Sources */,
 				63ACEC79214D61BE00D555F1 /* SettingsLinkCell.swift in Sources */,
+				C21161D8218516290041A856 /* NetworkManager+Session.swift in Sources */,
 				63A4A6482094D5EF00523AE6 /* FRPollBuilderView.swift in Sources */,
 				C26D5F53214F5FE900548255 /* PollsDateCell.swift in Sources */,
 				C2A0F7CD213A106C00A28D75 /* HamburgerCardModel.swift in Sources */,
