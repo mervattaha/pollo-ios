@@ -48,9 +48,8 @@ class NetworkManager {
         guard let url = URL(string: urlString) else { return }
         Alamofire.request(url, method: .post, parameters: parameters, encoding: encoding, headers: headers)
             .responseData { response in
-                if let error = response.error {
-                    completionHandler(.error(error))
-                } else if let data = response.data {
+                switch response.result {
+                case .success(let data):
                     let jsonDecoder = JSONDecoder()
                     do {
                         let apiData = try jsonDecoder.decode(APIData<Draft>.self, from: data)
@@ -59,7 +58,7 @@ class NetworkManager {
                     } catch {
                         completionHandler(.error(PolloError.invalidResponse))
                     }
-                } else {
+                case .failure(_):
                     completionHandler(.error(PolloError.invalidResponse))
                 }
         }
