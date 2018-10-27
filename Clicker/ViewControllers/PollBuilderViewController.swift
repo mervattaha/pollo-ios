@@ -319,12 +319,21 @@ class PollBuilderViewController: UIViewController {
                             print("error: ", error)
                         }
                 } else {
-                    CreateDraft(text: question, options: options).make()
-                        .done { draft in
+//                    CreateDraft(text: question, options: options).make()
+//                        .done { draft in
+//                            self.drafts.insert(draft, at: 0)
+//                            self.updateDraftsCount()
+//                        }.catch { error in
+//                            print("error: ", error)
+//                    }
+                    NetworkManager.createDraft(text: question, options: options) { response in
+                        switch response {
+                        case .value(let draft):
                             self.drafts.insert(draft, at: 0)
                             self.updateDraftsCount()
-                        }.catch { error in
-                            print("error: ", error)
+                        case .error(let error):
+                            print(error)
+                        }
                     }
                 }
                 loadedMCDraft = nil
