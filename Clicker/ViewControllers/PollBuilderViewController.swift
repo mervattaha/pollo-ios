@@ -410,22 +410,13 @@ class PollBuilderViewController: UIViewController {
     
     // MARK: - Helpers
     func getDrafts() {
-        NetworkManager.getDrafts { (result) in
-            switch result {
-            case .value(let drafts):
+        GetDrafts().make()
+            .done { drafts in
                 self.drafts = drafts
                 self.updateDraftsCount()
-            case .error(let error):
-                print(error)
-            }
+            } .catch { error in
+                print("error: ", error)
         }
-//        GetDrafts().make()
-//            .done { drafts in
-//                self.drafts = drafts
-//                self.updateDraftsCount()
-//            } .catch { error in
-//                print("error: ", error)
-//        }
     }
     
     func updateDraftsCount() {

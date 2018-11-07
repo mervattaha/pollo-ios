@@ -36,12 +36,7 @@ struct APIResponse<T: Codable>: Codable {
 struct APIData<T: Codable>: Codable {
     let node: T?
     let nodes: [Node<T>]?
-    let edges: [PolloEdge<T>]?
-}
-
-struct PolloEdge<T: Codable>: Codable {
-    let cursor: String
-    let node: Node<T>
+    let edges: [Node<T>]?
 }
 
 struct Node<T: Codable>: Codable {
@@ -69,7 +64,7 @@ extension APIRequest {
     }
 
     var encoding: ParameterEncoding {
-        return JSONEncoding.default
+        return URLEncoding.default
     }
 }
 
@@ -118,7 +113,7 @@ class NetworkManager {
 
     private class func handleAPIData<T: Codable>(_ apiData: APIData<T>, completion: ((Result<[T]>) -> Void)?) {
         if let edges = apiData.edges {
-            let nodes = edges.map { $0.node.value }
+            let nodes = edges.map { $0.value }
             completion?(.value(nodes))
         }
     }
@@ -126,6 +121,7 @@ class NetworkManager {
     private class func alamofireRequest<T: Codable>(for apiRequest: APIRequest, completion: ((IntermediaryResult<T>) -> Void)?) {
         let urlString = "\(getBaseURL())\(apiRequest.route)"
         guard let url = URL(string: urlString) else { return }
+        print(headers)
         Alamofire.request(url, method: apiRequest.method, parameters: apiRequest.parameters, encoding: apiRequest.encoding, headers: headers).responseData { (response) in
             switch response.result {
             case .success(let data):

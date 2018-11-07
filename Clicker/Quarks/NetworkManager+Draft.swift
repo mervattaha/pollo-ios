@@ -13,8 +13,9 @@ extension NetworkManager {
 
     struct CreateDraftRequest: APIRequest {
         let route: String = "/drafts"
-        let parameters: Parameters
+        let encoding: ParameterEncoding = JSONEncoding.default
         let method: HTTPMethod = .post
+        let parameters: Parameters
     }
 
     class func createDraft(text: String, options: [String], completion: @escaping ((Result<Draft>) -> Void)) {
