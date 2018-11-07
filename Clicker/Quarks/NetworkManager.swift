@@ -14,6 +14,11 @@ enum Result<T> {
     case error(Error)
 }
 
+enum IntermediaryResult<T: Codable> {
+    case value(APIData<T>)
+    case error(Error)
+}
+
 enum PolloError: Error {
     case invalidResponse
 }
@@ -31,6 +36,12 @@ struct APIResponse<T: Codable>: Codable {
 struct APIData<T: Codable>: Codable {
     let node: T?
     let nodes: [Node<T>]?
+    let edges: [PolloEdge<T>]?
+}
+
+struct PolloEdge<T: Codable>: Codable {
+    let cursor: String
+    let node: Node<T>
 }
 
 struct Node<T: Codable>: Codable {
@@ -78,6 +89,41 @@ class NetworkManager {
     }
 
     class func performRequest<T: Codable>(for apiRequest: APIRequest, completion: ((Result<T>) -> Void)?) {
+        alamofireRequest(for: apiRequest) { (intermediaryResult: IntermediaryResult<T>) in
+            switch intermediaryResult {
+            case .value(let apiData):
+                handleAPIData(apiData, completion: completion)
+            case .error(let error):
+                completion?(.error(error))
+            }
+        }
+    }
+
+    class func performRequest<T: Codable>(for apiRequest: APIRequest, completion: ((Result<[T]>) -> Void)?) {
+        alamofireRequest(for: apiRequest) { (intermediaryResult: IntermediaryResult<T>) in
+            switch intermediaryResult {
+            case .value(let data):
+                handleAPIData(data, completion: completion)
+            case .error(let error):
+                completion?(.error(error))
+            }
+        }
+    }
+
+    private class func handleAPIData<T: Codable>(_ apiData: APIData<T>, completion: ((Result<T>) -> Void)?) {
+        if let node = apiData.node {
+            completion?(.value(node))
+        }
+    }
+
+    private class func handleAPIData<T: Codable>(_ apiData: APIData<T>, completion: ((Result<[T]>) -> Void)?) {
+        if let edges = apiData.edges {
+            let nodes = edges.map { $0.node.value }
+            completion?(.value(nodes))
+        }
+    }
+
+    private class func alamofireRequest<T: Codable>(for apiRequest: APIRequest, completion: ((IntermediaryResult<T>) -> Void)?) {
         let urlString = "\(getBaseURL())\(apiRequest.route)"
         guard let url = URL(string: urlString) else { return }
         Alamofire.request(url, method: apiRequest.method, parameters: apiRequest.parameters, encoding: apiRequest.encoding, headers: headers).responseData { (response) in
@@ -87,9 +133,7 @@ class NetworkManager {
                     let decoder = JSONDecoder()
                     let apiResponse = try decoder.decode(APIResponse<T>.self, from: data)
                     let responseData = apiResponse.data
-                    if let node = responseData.node {
-                        completion?(.value(node))
-                    }
+                    completion?(.value(responseData))
                 } catch {
                     completion?(.error(PolloError.invalidResponse))
                 }

@@ -23,4 +23,13 @@ extension NetworkManager {
         performRequest(for: apiRequest, completion: completion)
     }
 
+    struct GetDraftsRequest: APIRequest {
+        let route: String = "/drafts"
+    }
+
+    class func getDrafts(completion: @escaping ((Result<[Draft]>) -> Void)) {
+        let apiRequest = GetDraftsRequest()
+        performRequest(for: apiRequest, completion: completion)
+    }
+
 }
