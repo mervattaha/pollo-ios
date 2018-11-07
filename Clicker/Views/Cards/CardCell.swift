@@ -65,6 +65,7 @@ class CardCell: UICollectionViewCell {
         frInputModel = FRInputModel()
         separatorLineModel = SeparatorLineModel(state: .card)
         bottomHamburgerCardModel = HamburgerCardModel(state: .bottom)
+        frInputModel = FRInputModel()
         setupViews()
     }
     
