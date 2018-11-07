@@ -14,6 +14,8 @@ enum Result<T> {
     case error(Error)
 }
 
+struct NoResponse: Codable {}
+
 enum IntermediaryResult<T: Codable> {
     case value(APIData<T>)
     case error(Error)
@@ -121,7 +123,6 @@ class NetworkManager {
     private class func alamofireRequest<T: Codable>(for apiRequest: APIRequest, completion: ((IntermediaryResult<T>) -> Void)?) {
         let urlString = "\(getBaseURL())\(apiRequest.route)"
         guard let url = URL(string: urlString) else { return }
-        print(headers)
         Alamofire.request(url, method: apiRequest.method, parameters: apiRequest.parameters, encoding: apiRequest.encoding, headers: headers).responseData { (response) in
             switch response.result {
             case .success(let data):

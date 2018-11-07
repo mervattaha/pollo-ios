@@ -1,8 +1,8 @@
 //
-//  NetworkManager.swift
+//  NetworkManager+Draft.swift
 //  Clicker
 //
-//  Created by Kevin Chan on 10/27/18.
+//  Created by Matthew Coufal on 11/7/18.
 //  Copyright © 2018 CornellAppDev. All rights reserved.
 //
 
@@ -13,9 +13,8 @@ extension NetworkManager {
 
     struct CreateDraftRequest: APIRequest {
         let route: String = "/drafts"
-        let encoding: ParameterEncoding = JSONEncoding.default
-        let method: HTTPMethod = .post
         let parameters: Parameters
+        let method: HTTPMethod = .post
     }
 
     class func createDraft(text: String, options: [String], completion: @escaping ((Result<Draft>) -> Void)) {
@@ -24,13 +23,37 @@ extension NetworkManager {
         performRequest(for: apiRequest, completion: completion)
     }
 
+    struct DeleteDraftRequest: APIRequest {
+        let route: String
+        let method: HTTPMethod = .delete
+    }
+
+    class func deleteDraft(id: String, completion: @escaping ((Result<NoResponse>) -> Void)) {
+        let route: String = "/drafts\(id)"
+        let apiRequest = DeleteDraftRequest(route: route)
+        performRequest(for: apiRequest, completion: completion)
+    }
+
+    struct UpdateDraftRequest: APIRequest {
+        let route: String
+        let parameters: Parameters
+        let method: HTTPMethod = .put
+    }
+
+    class func updateDraft(id: String, text: String, options: [String], completion: @escaping ((Result<Draft>) -> Void)) {
+        let route: String = "/drafts/\(id)"
+        let parameters: Parameters = ["text": text, "options": options]
+        let apiRequest = UpdateDraftRequest(route: route, parameters: parameters)
+        performRequest(for: apiRequest, completion: completion)
+    }
+
     struct GetDraftsRequest: APIRequest {
         let route: String = "/drafts"
+        let method: HTTPMethod = .get
     }
 
     class func getDrafts(completion: @escaping ((Result<[Draft]>) -> Void)) {
-        let apiRequest = GetDraftsRequest()
-        performRequest(for: apiRequest, completion: completion)
+        performRequest(for: GetDraftsRequest(), completion: completion)
     }
 
 }
