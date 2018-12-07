@@ -6,6 +6,7 @@
 //  Copyright © 2018 CornellAppDev. All rights reserved.
 //
 
+import CoreLocation
 import GoogleSignIn
 import IGListKit
 import Presentr
@@ -31,6 +32,7 @@ class PollsViewController: UIViewController {
     
     // MARK: - Data vars
     var pollTypeModels: [PollTypeModel]!
+    var locationManager: CLLocationManager!
     var isKeyboardShown: Bool = false
     var isOpeningGroup: Bool = false
     var isListeningToKeyboard: Bool = true
@@ -60,7 +62,13 @@ class PollsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clickerGrey8
-        
+
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+
         let joinedPollTypeModel = PollTypeModel(pollType: .joined, sessions: nil)
         let createdPollTypeModel = PollTypeModel(pollType: .created, sessions: nil)
         pollTypeModels = [joinedPollTypeModel, createdPollTypeModel]

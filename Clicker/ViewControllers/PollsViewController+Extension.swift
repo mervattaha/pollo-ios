@@ -6,6 +6,7 @@
 //  Copyright © 2018 CornellAppDev. All rights reserved.
 //
 
+import CoreLocation
 import IGListKit
 import Presentr
 import UIKit
@@ -142,31 +143,6 @@ extension PollsViewController: SliderBarDelegate {
 
 }
 
-extension PollsViewController: UITextFieldDelegate {
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return false
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let maxLength = 6
-        let currentString: NSString = (textField.text ?? "") as NSString
-        let newString: NSString =
-            currentString.replacingCharacters(in: range, with: string) as NSString
-        return newString.length <= maxLength
-    }
-    
-}
-
-extension PollsViewController: UIGestureRecognizerDelegate {
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return isKeyboardShown
-    }
-    
-}
-
 extension PollsViewController: PollsDateViewControllerDelegate {
 
     func pollsDateViewControllerWasPopped(for userRole: UserRole) {
@@ -176,6 +152,40 @@ extension PollsViewController: PollsDateViewControllerDelegate {
             guard let pollTypeSectionController = self.adapter.sectionController(forSection: index) as? PollTypeSectionController else { return }
             pollTypeSectionController.update(with: sessions)
         }
+    }
+
+}
+
+extension PollsViewController: CLLocationManagerDelegate {
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = manager.location?.coordinate else { return }
+        print("Current Location: \(location.latitude), \(location.longitude)")
+    }
+
+}
+
+extension PollsViewController: UITextFieldDelegate {
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let maxLength = 6
+        let currentString: NSString = (textField.text ?? "") as NSString
+        let newString: NSString =
+            currentString.replacingCharacters(in: range, with: string) as NSString
+        return newString.length <= maxLength
+    }
+
+}
+
+extension PollsViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return isKeyboardShown
     }
 
 }
